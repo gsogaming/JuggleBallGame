@@ -3,88 +3,88 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FeetController : MonoBehaviour
-{    
-    
+{
+
     public GameObject rightFoot, leftFoot;
     public GameObject orientationObject;
-    private Vector3 targetPosition;
     private Vector3 originalPosRight;
-    private Vector3 originalRotRight;
     private Vector3 originalPosLeft;
+    private Vector3 originalRotRight;
     private Vector3 originalRotLeft;
     private bool rightFootSelected;
     private bool leftFootSelected;
-    
+    private Vector3 targetPos;
 
-  
+    Rigidbody rightFootRb;
+    Rigidbody leftFootRb;
 
+    Collider rightFootCol;
+    Collider leftFootCol;
 
 
     private void Start()
     {
-        
         originalPosRight = rightFoot.transform.position;
-        originalRotRight = rightFoot.transform.rotation.eulerAngles;
         originalPosLeft = leftFoot.transform.position;
-        originalRotLeft = leftFoot.transform.rotation.eulerAngles;
 
-              
+        originalRotLeft = leftFoot.transform.rotation.eulerAngles;
+        originalRotRight = rightFoot.transform.rotation.eulerAngles;
+
+        rightFootRb = rightFoot.GetComponent<Rigidbody>();
+        leftFootRb = leftFoot.GetComponent<Rigidbody>();
+
+        rightFootCol = rightFoot.GetComponent<Collider>();
+        leftFootCol = leftFoot.GetComponent<Collider>();
+
+
+
     }
 
-
-    // Update is called once per frame
     void Update()
     {
-        ButtonControls();
-        
-
-
-    }
-
-    private void ButtonControls()
-    {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2)
         {
-
-            // Get the mouse position in screen coordinates
-            Vector3 mousePos = Input.mousePosition;
-
-            // Set the Z position to a constant value to ensure the object doesn't get too close or too far
-            mousePos.z = 10;
-
-            // Convert the screen coordinates to world coordinates
-            targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
-            rightFootSelected = false;
+            rightFootSelected = false;  
             leftFootSelected = true;
-
+            
         }
-        else if (Input.GetMouseButton(1))
+        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2)
         {
-            // Get the mouse position in screen coordinates
-            Vector3 mousePos = Input.mousePosition;
-
-            // Set the Z position to a constant value to ensure the object doesn't get too close or too far
-            mousePos.z = 10;
-
-            // Convert the screen coordinates to world coordinates
-            targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
+            leftFootSelected = false;
             rightFootSelected = true;
-            leftFootSelected = false;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
             
-            leftFootSelected = false;
-            leftFoot.transform.position = originalPosLeft;
-            leftFoot.transform.rotation = Quaternion.Euler(originalRotLeft);
         }
-        else if (Input.GetMouseButtonUp(1))
+
+        if (Input.GetMouseButtonUp(0))
         {
-            
             rightFootSelected = false;
+            leftFootSelected = false;
+
+            leftFoot.transform.position = originalPosLeft;
             rightFoot.transform.position = originalPosRight;
+
+            leftFoot.transform.rotation = Quaternion.Euler(originalRotLeft);
             rightFoot.transform.rotation = Quaternion.Euler(originalRotRight);
         }
+
+        if (rightFootSelected)
+        {
+            rightFoot.transform.LookAt(orientationObject.transform);
+        }
+        else if (leftFootSelected)
+        {
+            leftFoot.transform.LookAt(orientationObject.transform);
+        }
+
+        rightFootCol.enabled = rightFootSelected;
+        leftFootCol.enabled = leftFootSelected;
+
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 10;
+        targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+
+
+
 
     }
 
@@ -92,22 +92,18 @@ public class FeetController : MonoBehaviour
     {
         if (rightFootSelected)
         {
-            rightFoot.GetComponent<Rigidbody>().MovePosition(targetPosition);
-            rightFoot.transform.LookAt(orientationObject.transform.position);
-            rightFoot.GetComponent<Collider>().enabled = true;
-            leftFoot.GetComponent<Collider>().enabled = false;
-
-
+            rightFootRb.MovePosition(targetPos);            
+            leftFoot.transform.position = originalPosLeft;            
         }
         else if (leftFootSelected)
         {
-
-            leftFoot.GetComponent<Rigidbody>().MovePosition(targetPosition);
-            leftFoot.transform.LookAt(orientationObject.transform.position);
-            leftFoot.GetComponent<Collider>().enabled = true; ;
-            rightFoot.GetComponent<Collider>().enabled = false;
+            leftFootRb.MovePosition(targetPos);
+            //leftFoot.transform.LookAt(orientationObject.transform);
+            rightFoot.transform.position = originalPosRight;
         }
-       
+
 
     }
+
+    
 }
