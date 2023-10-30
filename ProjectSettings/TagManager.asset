@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ball
   - Foot
+  - Ground
   layers:
   - Default
   - TransparentFX

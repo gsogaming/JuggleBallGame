@@ -21,6 +21,7 @@ public class FeetController : MonoBehaviour
     Collider rightFootCol;
     Collider leftFootCol;
 
+    private GameManager gameManager;
 
     private void Start()
     {
@@ -36,26 +37,28 @@ public class FeetController : MonoBehaviour
         rightFootCol = rightFoot.GetComponent<Collider>();
         leftFootCol = leftFoot.GetComponent<Collider>();
 
+        gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
+
 
 
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2)
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2 && !gameManager.isGameOver)
         {
             rightFootSelected = false;  
             leftFootSelected = true;
             
         }
-        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2)
+        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2 && !gameManager.isGameOver)
         {
             leftFootSelected = false;
             rightFootSelected = true;
             
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || gameManager.isGameOver)
         {
             rightFootSelected = false;
             leftFootSelected = false;
@@ -101,7 +104,6 @@ public class FeetController : MonoBehaviour
             //leftFoot.transform.LookAt(orientationObject.transform);
             rightFoot.transform.position = originalPosRight;
         }
-
 
     }
 
