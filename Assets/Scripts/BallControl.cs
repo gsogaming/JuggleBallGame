@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +11,7 @@ public class BallControl : MonoBehaviour
     Rigidbody ballRb;
     public float gravityScale = 1.0f;
     public static float globalGravity = -9.81f;
+    public float maxBallVelocity;
 
     private int score;
     public TextMeshProUGUI scoreText;
@@ -21,6 +22,7 @@ public class BallControl : MonoBehaviour
     public AudioClip gameOverSound;
 
     private GameManager gamemanager;
+
 
 
     // Start is called before the first frame update
@@ -49,6 +51,14 @@ public class BallControl : MonoBehaviour
             ballRb.AddForce(gravity, ForceMode.Acceleration);
         }
 
+        if (ballRb.velocity.y >= maxBallVelocity)
+        {
+            ballRb.velocity = new Vector3(ballRb.velocity.x, maxBallVelocity,ballRb.velocity.z);
+        }
+
+        Debug.Log(ballRb.velocity);
+        
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -60,6 +70,8 @@ public class BallControl : MonoBehaviour
 
             
         }
+
+        
     }
 
     private void OnCollisionEnter(Collision collision)
