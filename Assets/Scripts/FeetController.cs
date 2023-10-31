@@ -86,9 +86,7 @@ public class FeetController : MonoBehaviour
         mousePos.z = 10;
         targetPos = Camera.main.ScreenToWorldPoint(mousePos);
 
-
-
-
+        
     }
 
     private void FixedUpdate()
@@ -96,7 +94,8 @@ public class FeetController : MonoBehaviour
         if (rightFootSelected)
         {
             rightFootRb.MovePosition(targetPos);            
-            leftFoot.transform.position = originalPosLeft;            
+            leftFoot.transform.position = originalPosLeft;  
+            
         }
         else if (leftFootSelected)
         {

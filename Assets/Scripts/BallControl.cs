@@ -44,19 +44,27 @@ public class BallControl : MonoBehaviour
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
         if (ballRb.velocity.y <= 1)
         {
-            ballRb.AddForce(gravity * 1.5f, ForceMode.Acceleration);
+            ballRb.AddForce(gravity * 2, ForceMode.Acceleration);
+            
         }
         else
         {
-            ballRb.AddForce(gravity, ForceMode.Acceleration);
+
+            ballRb.AddForce(gravity * 1.5f, ForceMode.Acceleration);          
+            
         }
 
         if (ballRb.velocity.y >= maxBallVelocity)
         {
             ballRb.velocity = new Vector3(ballRb.velocity.x, maxBallVelocity,ballRb.velocity.z);
+            Debug.Log(ballRb.velocity);
+        }
+        else if (ballRb.velocity.y <= -maxBallVelocity)
+        {
+            ballRb.velocity = new Vector3(ballRb.velocity.x, -maxBallVelocity, ballRb.velocity.z);
+            Debug.Log(ballRb.velocity);
         }
 
-        Debug.Log(ballRb.velocity);
         
 
     }
@@ -66,9 +74,7 @@ public class BallControl : MonoBehaviour
         if (other.gameObject.CompareTag("Foot") && !gamemanager.isGameOver)
         {
             score++;
-            scoreText.text = "Score :" + score.ToString();
-
-            
+            scoreText.text = "Score :" + score.ToString();            
         }
 
         
@@ -88,6 +94,16 @@ public class BallControl : MonoBehaviour
         {
             soundEffect.clip = ballSounds[Random.Range(0, ballSounds.Length)];
             soundEffect.Play();
+
+            ballRb.drag = 2;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Foot") && !gamemanager.isGameOver)
+        {
+            ballRb.drag = 0;
         }
     }
 
