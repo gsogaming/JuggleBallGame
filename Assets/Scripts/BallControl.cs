@@ -42,9 +42,9 @@ public class BallControl : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 gravity = globalGravity * gravityScale * Vector3.up;
-        if (ballRb.velocity.y <= 1)
+        if (ballRb.velocity.y <= 0)
         {
-            ballRb.AddForce(gravity * 2, ForceMode.Acceleration);
+            ballRb.AddForce(gravity * 2.5f, ForceMode.Acceleration);
             
         }
         else
