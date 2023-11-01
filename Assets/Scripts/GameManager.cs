@@ -51,4 +51,9 @@ public class GameManager : MonoBehaviour
         startGameButton.SetActive(false);
         scoreText.SetActive(true);
     }
+
+    public void ButtonPressed()
+    {
+        Debug.Log("Button Pressed");
+    }
 }
