@@ -5,29 +5,46 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Game Loop Related")]
+    [Tooltip("Is the game over or not")]
     public bool isGameOver = false;
+    [Tooltip("has the game started or not")]
     public bool hasGameStarted = false;
 
-    public AudioSource startTheGameSound;
-
+    [Header("Manu GameObjects")]
     public GameObject gameOverScreen;
     public GameObject startGameButton;
     public GameObject scoreText;
+    public GameObject homeScreenButton;
+    public GameObject buyButton;
+
+    [Header("In Game referances")]
+    public GameObject ball;
+    private Rigidbody ballrb;
+    private Transform ballTransform;
+    private BallControl ballScript;
+    public AudioSource soundEffects;
+    public AudioSource music;
+    public AudioClip gameOverSound;
+    public AudioClip startGameSound;
+
+    private Vector3 originalBallPos;
 
     // Start is called before the first frame update
     void Start()
     {
         isGameOver = false;
+        ballrb = ball.GetComponent<Rigidbody>();
+        ballTransform = ball.GetComponent<Transform>();
+        originalBallPos = ballTransform.position;
+        ballScript = ball.GetComponent<BallControl>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isGameOver)
-        {
-            gameOverScreen.SetActive(true);
-        }
-
+        
         if (!hasGameStarted)
         {
             Time.timeScale = 0;
@@ -41,19 +58,35 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            
+        ballScript.score = 0;         
+        StartTheGame();
+        music.Play();
     }
 
     public void StartTheGame()
     {
+        isGameOver = false;
         hasGameStarted = true;
-        startTheGameSound.Play();
+        ballTransform.position = originalBallPos;
+        soundEffects.clip = startGameSound;
+        soundEffects.Play();
         startGameButton.SetActive(false);
+        gameOverScreen.SetActive(false);
         scoreText.SetActive(true);
+        homeScreenButton.SetActive(false);
+        buyButton.SetActive(false);        
+        ballrb.AddForce(transform.up * 50, ForceMode.Impulse);
     }
 
-    public void ButtonPressed()
+    public void GameOver()
     {
-        Debug.Log("Button Pressed");
+        isGameOver = true;        
+        gameOverScreen.SetActive(true);
+        music.Stop();
+        soundEffects.clip = gameOverSound;
+        soundEffects.Play();
     }
+
+    
 }

@@ -13,13 +13,12 @@ public class BallControl : MonoBehaviour
     public static float globalGravity = -9.81f;
     public float maxBallVelocity;
 
-    private int score;
+    public int score;
     public TextMeshProUGUI scoreText;
 
     public AudioSource soundEffect;
-    public AudioSource music;
     public AudioClip[] ballSounds;
-    public AudioClip gameOverSound;
+    
 
     private GameManager gamemanager;
 
@@ -36,7 +35,7 @@ public class BallControl : MonoBehaviour
 
     private void Start()
     {
-        ballRb.AddForce(transform.up * 50, ForceMode.Impulse);
+        
     }
 
     void FixedUpdate()
@@ -74,7 +73,7 @@ public class BallControl : MonoBehaviour
         if (other.gameObject.CompareTag("Foot") && !gamemanager.isGameOver)
         {
             score++;
-            scoreText.text = "Score :" + score.ToString();            
+            scoreText.text = "Score: " + score.ToString();            
         }
 
         
@@ -82,18 +81,15 @@ public class BallControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground") && !gamemanager.isGameOver)
+        if (collision.gameObject.CompareTag("Ground") && !gamemanager.isGameOver && gamemanager.hasGameStarted)
         {
-            gamemanager.isGameOver = true;
-            music.Stop();
-            soundEffect.clip = gameOverSound;
-            soundEffect.Play();
+            gamemanager.GameOver();
         }
 
         if (collision.gameObject.CompareTag("Foot") && !gamemanager.isGameOver)
         {
             soundEffect.clip = ballSounds[Random.Range(0, ballSounds.Length)];
-            soundEffect.Play();
+            soundEffect.Play();           
 
             ballRb.drag = 2;
         }
