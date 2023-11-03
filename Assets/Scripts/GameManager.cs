@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject scoreText;
     public GameObject homeScreenButton;
     public GameObject buyButton;
+    public GameObject bottomMenu;
 
     [Header("In Game referances")]
     public GameObject ball;
@@ -68,14 +70,20 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = false;
         hasGameStarted = true;
+
         ballTransform.position = originalBallPos;
+
         soundEffects.clip = startGameSound;
         soundEffects.Play();
+
         startGameButton.SetActive(false);
         gameOverScreen.SetActive(false);
-        scoreText.SetActive(true);
         homeScreenButton.SetActive(false);
-        buyButton.SetActive(false);        
+        buyButton.SetActive(false);
+        bottomMenu.SetActive(false);
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + 0;
+
+        scoreText.SetActive(true);
         ballrb.AddForce(transform.up * 50, ForceMode.Impulse);
     }
 
@@ -86,7 +94,17 @@ public class GameManager : MonoBehaviour
         music.Stop();
         soundEffects.clip = gameOverSound;
         soundEffects.Play();
+        homeScreenButton.SetActive(true);
+        
     }
+
+    public void HomeScreenActivation()
+    {
+        bottomMenu.SetActive(true);
+        startGameButton.SetActive(false);
+    }
+
+
 
     
 }

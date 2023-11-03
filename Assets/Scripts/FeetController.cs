@@ -45,13 +45,13 @@ public class FeetController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2 && !gameManager.isGameOver)
+        if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2 && !gameManager.isGameOver && gameManager.hasGameStarted)
         {
             rightFootSelected = false;  
             leftFootSelected = true;
             
         }
-        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2 && !gameManager.isGameOver)
+        else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2 && !gameManager.isGameOver && gameManager.hasGameStarted)
         {
             leftFootSelected = false;
             rightFootSelected = true;
