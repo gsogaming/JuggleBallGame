@@ -85,6 +85,11 @@ public class FeetController : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 10;
         targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+        if (targetPos.y <= -3.6f)
+        {
+            targetPos.y = -3.6f;
+        }
+        Debug.Log(targetPos);
 
         
     }
