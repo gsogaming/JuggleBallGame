@@ -20,11 +20,13 @@ public class GameManager : MonoBehaviour
     public GameObject buyButton;
     public GameObject bottomMenu;
 
+
     [Header("In Game referances")]
     public GameObject ball;
     private Rigidbody ballrb;
     private Transform ballTransform;
     private BallControl ballScript;
+    private FeetController feetScript;
     public AudioSource soundEffects;
     public AudioSource music;
     public AudioClip gameOverSound;
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
         ballTransform = ball.GetComponent<Transform>();
         originalBallPos = ballTransform.position;
         ballScript = ball.GetComponent<BallControl>();
+        feetScript = FindObjectOfType<FeetController>().GetComponent<FeetController>();
+
         
     }
 
@@ -85,6 +89,10 @@ public class GameManager : MonoBehaviour
 
         scoreText.SetActive(true);
         ballrb.AddForce(transform.up * 50, ForceMode.Impulse);
+
+        feetScript.leftFootStamina.gameObject.SetActive(true);
+        feetScript.rightFootStamina.gameObject.SetActive(true);
+
     }
 
     public void GameOver()
@@ -95,6 +103,8 @@ public class GameManager : MonoBehaviour
         soundEffects.clip = gameOverSound;
         soundEffects.Play();
         homeScreenButton.SetActive(true);
+        feetScript.leftFootStamina.gameObject.SetActive(false);
+        feetScript.rightFootStamina.gameObject.SetActive(false);
         
     }
 

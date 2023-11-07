@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FeetController : MonoBehaviour
 {
 
     public GameObject rightFoot, leftFoot;
-    public GameObject orientationObject;
     private Vector3 originalPosRight;
     private Vector3 originalPosLeft;
     private Vector3 originalRotRight;
@@ -14,6 +14,7 @@ public class FeetController : MonoBehaviour
     private bool rightFootSelected;
     private bool leftFootSelected;
     private Vector3 targetPos;
+    public GameObject orientationObject;
 
     Rigidbody rightFootRb;
     Rigidbody leftFootRb;
@@ -22,6 +23,18 @@ public class FeetController : MonoBehaviour
     Collider leftFootCol;
 
     private GameManager gameManager;
+
+    public Slider leftFootStamina, rightFootStamina;
+    public float staminaReloadRate;
+    public float staminaDepleteRate = 10;
+    public float maxStamina;
+    private float leftStamina;
+    private float rightStamina;
+    private bool leftStaminaDepleted;
+    private bool rightStaminaDepleted;
+    public GameObject LeftStamDepletionWarning;
+    public GameObject rightStamDepletionWarning;
+   
 
     private void Start()
     {
@@ -39,6 +52,10 @@ public class FeetController : MonoBehaviour
 
         gameManager = FindObjectOfType<GameManager>().GetComponent<GameManager>();
 
+        leftStamina = maxStamina;
+        rightStamina = maxStamina;
+        UpdateStaminaUI();
+
 
 
     }
@@ -47,18 +64,19 @@ public class FeetController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && Input.mousePosition.x < Screen.width / 2 && !gameManager.isGameOver && gameManager.hasGameStarted)
         {
-            rightFootSelected = false;  
+            rightFootSelected = false;
             leftFootSelected = true;
             
+
         }
         else if (Input.GetMouseButtonDown(0) && Input.mousePosition.x >= Screen.width / 2 && !gameManager.isGameOver && gameManager.hasGameStarted)
         {
             leftFootSelected = false;
             rightFootSelected = true;
-            
+
         }
 
-        if (Input.GetMouseButtonUp(0) || gameManager.isGameOver)
+        if (Input.GetMouseButtonUp(0) || gameManager.isGameOver )
         {
             rightFootSelected = false;
             leftFootSelected = false;
@@ -72,11 +90,11 @@ public class FeetController : MonoBehaviour
 
         if (rightFootSelected)
         {
-            rightFoot.transform.LookAt(orientationObject.transform);
+            rightFoot.transform.LookAt(orientationObject.transform);            
         }
         else if (leftFootSelected)
         {
-            leftFoot.transform.LookAt(orientationObject.transform);
+            leftFoot.transform.LookAt(orientationObject.transform);            
         }
 
         rightFootCol.enabled = rightFootSelected;
@@ -89,27 +107,85 @@ public class FeetController : MonoBehaviour
         {
             targetPos.y = -3.6f;
         }
-        Debug.Log(targetPos);
 
-        
+        StaminaControl();
+        UpdateStaminaUI();
+
+
     }
 
     private void FixedUpdate()
     {
-        if (rightFootSelected)
+        if (rightFootSelected && !rightStaminaDepleted)
         {
-            rightFootRb.MovePosition(targetPos);            
-            leftFoot.transform.position = originalPosLeft;  
-            
+            rightFootRb.MovePosition(targetPos);
+            leftFoot.transform.position = originalPosLeft;
+
         }
-        else if (leftFootSelected)
+        else if (leftFootSelected && !leftStaminaDepleted)
         {
-            leftFootRb.MovePosition(targetPos);
-            //leftFoot.transform.LookAt(orientationObject.transform);
+            leftFootRb.MovePosition(targetPos);            
             rightFoot.transform.position = originalPosRight;
         }
 
     }
 
+    void StaminaControl()
+    {
+        if (leftFootSelected)
+        {
+            leftStamina -= staminaDepleteRate * Time.deltaTime;
+            rightStamina += staminaReloadRate * Time.deltaTime;
+        }
+        
+        if (rightFootSelected)
+        {
+            rightStamina -= staminaDepleteRate * Time.deltaTime;
+            leftStamina += staminaReloadRate * Time.deltaTime;
+        }
+
+        if (!rightFootSelected && !leftFootSelected)
+        {
+            leftStamina += staminaReloadRate * Time.deltaTime;
+            rightStamina += staminaReloadRate * Time.deltaTime;
+        }
+
+        if (rightStamina <= 1)
+        {
+            rightStaminaDepleted = true;
+            rightStamDepletionWarning.SetActive(true);
+        }
+
+        if (leftStamina <= 1)
+        {
+            leftStaminaDepleted = true;
+            LeftStamDepletionWarning.SetActive(true);
+        }
+
+        if (rightStamina >= 99)
+        {
+            rightStaminaDepleted = false;
+            rightStamDepletionWarning.SetActive(false);
+        }
+
+        if (leftStamina >= 99)
+        {
+            leftStaminaDepleted = false;
+            LeftStamDepletionWarning.SetActive(false);
+        }
+
+        rightStamina = Mathf.Clamp(rightStamina, 0, 100);
+        leftStamina = Mathf.Clamp(leftStamina, 0, 100);
+        Debug.Log(rightStamina);
+    }
+
     
+
+    void UpdateStaminaUI()
+    {
+        leftFootStamina.value = leftStamina / maxStamina;
+        rightFootStamina.value = rightStamina / maxStamina;
+    }
+
+
 }
