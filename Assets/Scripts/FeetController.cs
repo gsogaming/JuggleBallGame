@@ -24,7 +24,7 @@ public class FeetController : MonoBehaviour
 
     private GameManager gameManager;
 
-    public Slider leftFootStamina, rightFootStamina;
+    public Slider leftFootStaminaBar, rightFootStaminaBar;
     public float staminaReloadRate;
     public float staminaDepleteRate = 10;
     public float maxStamina;
@@ -108,8 +108,11 @@ public class FeetController : MonoBehaviour
             targetPos.y = -3.6f;
         }
 
-        StaminaControl();
-        UpdateStaminaUI();
+        if (leftFootStaminaBar != null && rightFootStaminaBar != null)
+        {
+            StaminaControl();
+            UpdateStaminaUI();
+        }
 
 
     }
@@ -182,9 +185,9 @@ public class FeetController : MonoBehaviour
     
 
     void UpdateStaminaUI()
-    {
-        leftFootStamina.value = leftStamina / maxStamina;
-        rightFootStamina.value = rightStamina / maxStamina;
+    {        
+        leftFootStaminaBar.value = leftStamina / maxStamina;
+        rightFootStaminaBar.value = rightStamina / maxStamina;
     }
 
 

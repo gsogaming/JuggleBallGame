@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject scoreText;
     public GameObject homeScreenButton;
     public GameObject buyButton;
-    public GameObject bottomMenu;
+    public GameObject bottomMenu;    
 
 
     [Header("In Game referances")]
@@ -82,16 +82,20 @@ public class GameManager : MonoBehaviour
 
         startGameButton.SetActive(false);
         gameOverScreen.SetActive(false);
-        homeScreenButton.SetActive(false);
-        buyButton.SetActive(false);
-        bottomMenu.SetActive(false);
-        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + 0;
 
+        homeScreenButton.SetActive(false);
+
+        buyButton.SetActive(false);
+
+        bottomMenu.SetActive(false);
+
+        scoreText.GetComponent<TextMeshProUGUI>().text = "Score: " + 0;
         scoreText.SetActive(true);
+
         ballrb.AddForce(transform.up * 50, ForceMode.Impulse);
 
-        feetScript.leftFootStamina.gameObject.SetActive(true);
-        feetScript.rightFootStamina.gameObject.SetActive(true);
+        feetScript.leftFootStaminaBar.gameObject.SetActive(true);
+        feetScript.rightFootStaminaBar.gameObject.SetActive(true);
 
     }
 
@@ -99,12 +103,15 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;        
         gameOverScreen.SetActive(true);
+
         music.Stop();
         soundEffects.clip = gameOverSound;
         soundEffects.Play();
+
         homeScreenButton.SetActive(true);
-        feetScript.leftFootStamina.gameObject.SetActive(false);
-        feetScript.rightFootStamina.gameObject.SetActive(false);
+
+        feetScript.leftFootStaminaBar.gameObject.SetActive(false);
+        feetScript.rightFootStaminaBar.gameObject.SetActive(false);
         
     }
 
@@ -112,6 +119,9 @@ public class GameManager : MonoBehaviour
     {
         bottomMenu.SetActive(true);
         startGameButton.SetActive(false);
+
+        feetScript.leftFootStaminaBar.gameObject.SetActive(false);
+        feetScript.rightFootStaminaBar.gameObject.SetActive(false);
     }
 
 
