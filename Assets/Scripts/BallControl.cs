@@ -20,7 +20,7 @@ public class BallControl : MonoBehaviour
     public AudioClip[] ballSounds;
     
 
-    private GameManager gamemanager;
+    private GameManager gamemanager;   
 
 
 
